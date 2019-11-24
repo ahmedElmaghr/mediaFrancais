@@ -1,0 +1,15 @@
+id	origine	valeur	cible	source	datePublication	dateConsultation	etat
+1	Claude Perdriel	53	Groupe Perdriel				P
+1	Claude Perdriel	participe	Groupe L’Opinon	challenges.fr	22/08/2014	6/11/2019	
+1	Claude Perdriel	60	Le Nouveau Magazine littéraire	lefigaro.fr	15/12/2017	8/12/2018	
+1	Claude Perdriel	50	Sophia Publications				N
+2	Sophia Publications	100	Historia	strategies.fr	14/11/2014	28/06/2016	
+2	Sophia Publications	100	L’histoire	lemonde.fr	23/06/2016	22/10/2016	
+3	Groupe Perdriel	100	Challenges	strategies.fr	14/11/2014	28/06/2016	
+3	Groupe Perdriel	100	Sciences & Avenir	strategies.fr	14/11/2014	28/06/2016	
+9	Prisa	20	Le Monde libre				
+10	Xavier Niel	11	Groupe La Provence			6/11/2019	
+10	Xavier Niel	26	Le Monde libre	https://fr.reuters.com/article/topNews/idFRKCN1BJ24Z-OFRTP	8/9/2017		
+10	Xavier Niel	participe	Le Nouveau Magazine littéraire				
+10	Xavier Niel	34	Nice-Matin			6/11/2019	
+11	Historia	poss�de	Xavier Niel	source test			

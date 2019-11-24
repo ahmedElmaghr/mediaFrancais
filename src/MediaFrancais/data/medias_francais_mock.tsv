@@ -1,0 +1,12 @@
+id	nom	typeLibelle	typeCode	rangChallenges	milliardaireForbes	mediaType	mediaPeriodicite	mediaEchelle	commentaire	x	y
+1	Claude Perdriel	Personne physique	1	339					Casablanca	-7.583331	33.5333312
+2	Sophia Publications	Personne morale	2						New York	-74.0059	40.7128
+3	Groupe Perdriel	Personne morale	2						Tokyo	139.6917	35.6895
+4	L’histoire	Média	3			GPE	Mensuel		Istanbul	28.9784	41.0082
+5	Historia	Média	3			GPE	Mensuel		Mexico	-99.1332	19.4326
+6	Challenges	Média	3			GPE	Hebdomadaire				
+7	Sciences & Avenir	Média	3			GPE	Mensuel				
+8	L’Opinion	Média	3			GPE	Quotidien		Paris	2.3522	48.8566
+9	Prisa	Personne morale	2								
+10	Xavier Niel	Personne physique	1	16					Moscow	37.6173	55.7558
+325	Groupe L’Opinon	Personne morale	2						Tehran	51.389	35.6892
