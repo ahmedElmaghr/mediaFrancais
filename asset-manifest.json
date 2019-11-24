@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/mediaFrancais/static/css/main.3b5d1a30.chunk.css",
+    "main.js": "/mediaFrancais/static/js/main.2ece3069.chunk.js",
+    "main.js.map": "/mediaFrancais/static/js/main.2ece3069.chunk.js.map",
+    "runtime-main.js": "/mediaFrancais/static/js/runtime-main.358bd96d.js",
+    "runtime-main.js.map": "/mediaFrancais/static/js/runtime-main.358bd96d.js.map",
+    "static/js/2.1461ef4c.chunk.js": "/mediaFrancais/static/js/2.1461ef4c.chunk.js",
+    "static/js/2.1461ef4c.chunk.js.map": "/mediaFrancais/static/js/2.1461ef4c.chunk.js.map",
+    "index.html": "/mediaFrancais/index.html",
+    "precache-manifest.cf7569958c65a9caa89bd0eaae826ed7.js": "/mediaFrancais/precache-manifest.cf7569958c65a9caa89bd0eaae826ed7.js",
+    "service-worker.js": "/mediaFrancais/service-worker.js",
+    "static/css/main.3b5d1a30.chunk.css.map": "/mediaFrancais/static/css/main.3b5d1a30.chunk.css.map",
+    "static/media/medias_francais.tsv": "/mediaFrancais/static/media/medias_francais.6491e171.tsv",
+    "static/media/relations_medias_francais.tsv": "/mediaFrancais/static/media/relations_medias_francais.d49ff9ff.tsv"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.358bd96d.js",
+    "static/js/2.1461ef4c.chunk.js",
+    "static/css/main.3b5d1a30.chunk.css",
+    "static/js/main.2ece3069.chunk.js"
+  ]
+}
