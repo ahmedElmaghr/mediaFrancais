@@ -35,8 +35,27 @@ export default class MediaFrancais extends Component {
                    //Draw Path from worldData
                    var g = this.drawMap(gGlobal, this.props.worldData);
                   //merge Morocco
-                   this.mergeMoroccoAndSahara(g, this.props.jsonData);
-                 }
+                  var jsonData = this.props.jsonData;
+                    //Moroccan Sahar id = 732
+                   //Morocco id = 504
+                  var morocco = jsonData.objects.countries.geometries.filter((d)=> d.id==504);
+                  var morrocanSahara = jsonData.objects.countries.geometries.filter((d)=> d.id==732);
+                  var toBeMerged = [morocco[0],morrocanSahara[0]];
+                  //
+                  console.log("g",g);
+                  console.log("morocco",morocco);
+                  console.log("morrocanSahara",morrocanSahara);
+                  console.log("toBeMerged",toBeMerged);
+                  g.append("path").datum(merge(jsonData,toBeMerged))
+                  .attr("className", "country")
+                  .attr("d", d => this.calculatePath(d))
+                  .attr("stroke", this.borderColor)
+                  .attr("stroke-width", 0.05)
+                  .attr("fill", "rgba(44, 130, 201, 1)");
+                  console.log("g",g);
+
+                }
+
                  componentDidMount() {
                    console.log("call the componentDidMount");
                  }
@@ -58,20 +77,18 @@ export default class MediaFrancais extends Component {
                    }
                    return (
                      <div className="dropdown">
-                       <select
+                    <select
                          id="mySelect"
                          className="dropbtn"
-                         onChange={e => {
-                           this.changeTheme(e.target.value);
-                         }}
+                         onChange={e => {this.changeTheme(e.target.value);                         }}
                        >
                          <option value="0">All theme</option>
                          <option value="1">Theme 1</option>
                          <option value="2">Theme 2</option>
                          <option value="3">Theme 3</option>
                          <option value="4">Theme 4</option>
-                       </select>
-                     </div>
+                      </select>
+                    </div>
                    );
                  }
 
@@ -169,6 +186,8 @@ export default class MediaFrancais extends Component {
                  //Draw Map 2
                  mergeMoroccoAndSahara = (g, jsonData) => {
                    //Merge Morrocan sahara with morocco
+                   //Moroccan Sahar id = 732
+                   //Morocco id = 504
                    var selected = d3.set([732, 504]);
                    g.append("path")
                      .datum(
@@ -209,7 +228,7 @@ export default class MediaFrancais extends Component {
                        return this.projection()(coordinate)[1];
                      })
                      .attr("r", d => {
-                       return this.getChildCount(
+                       return 1.5 * this.getChildCount(
                          d.nom,
                          relations_medias_francais
                        );
@@ -241,7 +260,7 @@ export default class MediaFrancais extends Component {
                  getChildCount = (nom, media) => {
                    var childsCount = media.filter(d => d.origine == nom).length;
                    if (childsCount === 0) {
-                     return 0.8;
+                     return 1;
                    }
                    return childsCount;
                  };
