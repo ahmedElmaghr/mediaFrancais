@@ -2,9 +2,9 @@ import * as d3 from "d3";
 import React, { Component } from "react";
 import { merge} from "topojson-client"
 import {StringUtils} from "../Utils/StringUtils.js"
-import "./MediaFrancais.css"
+import "./MediaFrancaisView.css"
 
-export default class MediaFrancais extends Component {
+export default class MediaFrancaisView extends Component {
                  //Constantes
 
                  width = "100%";
@@ -470,15 +470,9 @@ export default class MediaFrancais extends Component {
                  //Events handlers
                  circleOnHover = event => {
                    return (
-                     "entity : " +
                      event.nom +
-                     "country name : " +
-                     event.countryName +
-                     " [" +
-                     event.x +
-                     "," +
-                     event.y +
-                     "]"
+                     "\n" +
+                     event.countryName 
                    );
                  };
 
