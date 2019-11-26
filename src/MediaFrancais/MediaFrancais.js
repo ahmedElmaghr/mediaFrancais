@@ -413,7 +413,6 @@ export default class MediaFrancais extends Component {
                    var line = d3
                      .line()
                      .x(d => {
-                       console.log("dx", d);
                        return this.projection()([
                          d.coordinate[0],
                          d.coordinate[1]
@@ -444,26 +443,7 @@ export default class MediaFrancais extends Component {
                      .append("title")
                      .text(d => d.lien);
                  };
-
-                 //Draw a line between two points
-                 lineFunction = d => {
-                   console.log("lineFunction visited", d);
-                   d3.line()
-                     .x(d => {
-                       console.log("dx", d);
-                       return this.projection()([
-                         d.coordinate[0],
-                         d.coordinate[1]
-                       ])[0];
-                     })
-                     .y(d => {
-                       return this.projection()([
-                         d.coordinate[0],
-                         d.coordinate[1]
-                       ])[1];
-                     });
-                   //.curve(this.curveFunction);
-                 };                
+                   
 
                  colorPath = link => {
                    switch (link.etat) {
