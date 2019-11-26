@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import React, { Component } from "react";
 import { merge} from "topojson-client"
+import {StringUtils} from "../Utils/StringUtils.js"
 import "./MediaFrancais.css"
 
 export default class MediaFrancais extends Component {
@@ -26,36 +27,39 @@ export default class MediaFrancais extends Component {
                    };
                    this.changeTheme = this.changeTheme.bind(this);
                  }
+
                  componentWillMount() {
                    console.log("componentWillMount");
-
                    //Draw svg Wrapper
                    var svg = this.drawSvgWrapper();
                    var gGlobal = svg.append("g").attr("id", "gWrapper");
                    //Draw Path from worldData
                    var g = this.drawMap(gGlobal, this.props.worldData);
-                  //merge Morocco
-                  var jsonData = this.props.jsonData;
-                    //Moroccan Sahar id = 732
+                   //Merge morrocan sahara
+                   this.mergeMorrocanSahara(g);
+                 }
+
+                 mergeMorrocanSahara = (g) => {
+                   //merge Morocco
+                   var jsonData = this.props.jsonData;
+                   //Moroccan Sahara id = 732
                    //Morocco id = 504
-                  var morocco = jsonData.objects.countries.geometries.filter((d)=> d.id==504);
-                  var morrocanSahara = jsonData.objects.countries.geometries.filter((d)=> d.id==732);
-                  var toBeMerged = [morocco[0],morrocanSahara[0]];
-                  //
-                  console.log("g",g);
-                  console.log("morocco",morocco);
-                  console.log("morrocanSahara",morrocanSahara);
-                  console.log("toBeMerged",toBeMerged);
-                  g.append("path").datum(merge(jsonData,toBeMerged))
-                  .attr("className", "country")
-                  .attr("d", d => this.calculatePath(d))
-                  .attr("stroke", this.borderColor)
-                  .attr("stroke-width", 0.05)
-                  .attr("fill", "rgba(44, 130, 201, 1)");
-                  console.log("g",g);
-
-                }
-
+                   var morocco = jsonData.objects.countries.geometries.filter(
+                     d => d.id == 504
+                   );
+                   var morrocanSahara = jsonData.objects.countries.geometries.filter(
+                     d => d.id == 732
+                   );
+                   var toBeMerged = [morocco[0], morrocanSahara[0]];
+                   //
+                   g.append("path")
+                     .datum(merge(jsonData, toBeMerged))
+                     .attr("className", "country")
+                     .attr("d", d => this.calculatePath(d))
+                     .attr("stroke", this.borderColor)
+                     .attr("stroke-width", 0.05)
+                     .attr("fill", "rgba(44, 130, 201, 1)");
+                 };
                  componentDidMount() {
                    console.log("call the componentDidMount");
                  }
@@ -67,28 +71,35 @@ export default class MediaFrancais extends Component {
                    this.initMarkersAndLinks();
                    console.log("call MediaFrancais render");
                    const medias_francais = this.state.medias_francais;
-                   const { worldData, relations_medias_francais } = this.props;
+                   const {
+                     worldData,
+                     relations_medias_francais,
+                     countries
+                   } = this.props;
                    if (worldData.length > 0) {
                      this.createWorldMap(
                        medias_francais,
-                       relations_medias_francais
+                       relations_medias_francais,
+                       countries
                      );
                      this.showMarkersOnFirstOrder();
                    }
                    return (
                      <div className="dropdown">
-                    <select
+                       <select
                          id="mySelect"
                          className="dropbtn"
-                         onChange={e => {this.changeTheme(e.target.value);                         }}
+                         onChange={e => {
+                           this.changeTheme(e.target.value);
+                         }}
                        >
                          <option value="0">All theme</option>
                          <option value="1">Theme 1</option>
                          <option value="2">Theme 2</option>
                          <option value="3">Theme 3</option>
                          <option value="4">Theme 4</option>
-                      </select>
-                    </div>
+                       </select>
+                     </div>
                    );
                  }
 
@@ -119,7 +130,8 @@ export default class MediaFrancais extends Component {
                  //Create the world map
                  createWorldMap = (
                    medias_francais,
-                   relations_medias_francais
+                   relations_medias_francais,
+                   countries
                  ) => {
                    var gGlobal = d3.select("#gWrapper");
                    //Draw Medias
@@ -128,7 +140,8 @@ export default class MediaFrancais extends Component {
                    this.drawCnx(
                      gGlobal,
                      relations_medias_francais,
-                     medias_francais
+                     medias_francais,
+                     countries
                    );
                    //add zoom
                    this.addZoom(gGlobal);
@@ -176,42 +189,23 @@ export default class MediaFrancais extends Component {
                        .attr("d", d => this.calculatePath(d))
                        .attr("className", "country")
                        //.attr("fill", (d, i) => this.color(worldData, d, i))
-                       .attr("fill", (d, i) => `rgba(38,50,56,${(1 / worldData.length) * i})`)
+                       .attr(
+                         "fill",
+                         (d, i) =>
+                           `rgba(38,50,56,${(1 / worldData.length) * i})`
+                       )
                        .attr("stroke", this.borderColor)
                        .attr("stroke-width", 0.05);
                      return g;
                    }
                  };
 
-                 //Draw Map 2
-                 mergeMoroccoAndSahara = (g, jsonData) => {
-                   //Merge Morrocan sahara with morocco
-                   //Moroccan Sahar id = 732
-                   //Morocco id = 504
-                   var selected = d3.set([732, 504]);
-                   g.append("path")
-                     .datum(
-                       merge(
-                         jsonData,
-                         jsonData.objects.countries.geometries.filter(d => {
-                           return selected.has(d.id);
-                         })
-                       )
-                     )
-                     .attr("className", "country")
-                     .attr("d", d => this.calculatePath(d))
-                     .attr("stroke", this.borderColor)
-                     .attr("stroke-width", 0.05)
-                     .attr("fill", "gray");
-                   return g;
-                 };
-
                  //Add Markers Function
                  drawMediaPosition = (node, medias_francais) => {
-                   const { relations_medias_francais } = this.props;
+                   const { relations_medias_francais, countries } = this.props;
                    var markers = node.append("g").attr("class", "markers");
-                   var media_francais_filtre = medias_francais.filter(
-                     d => this.isNotEmpty(d.x) && this.isNotEmpty(d.y)
+                   var media_francais_filtre = medias_francais.filter(d =>
+                    StringUtils.isNotEmpty(d.countryName)
                    );
                    markers
                      .selectAll("circle")
@@ -220,17 +214,15 @@ export default class MediaFrancais extends Component {
                      .append("circle")
                      .attr("key", d => `marker-${d.id}`)
                      .attr("cx", d => {
-                       var coordinate = [d.x, d.y];
-                       return this.projection()(coordinate)[0];
+                       return this.getCx(d, countries);
                      })
                      .attr("cy", d => {
-                       var coordinate = [d.x, d.y];
-                       return this.projection()(coordinate)[1];
+                       return this.getCy(d, countries);
                      })
                      .attr("r", d => {
-                       return 1.5 * this.getChildCount(
-                         d.nom,
-                         relations_medias_francais
+                       return (
+                         1.5 *
+                         this.getChildCount(d.nom, relations_medias_francais)
                        );
                      })
                      .attr("fill", d => {
@@ -243,9 +235,33 @@ export default class MediaFrancais extends Component {
                      .attr("class", "marker")
                      .append("title")
                      .text(e => this.circleOnHover(e));
+
                    return markers;
                  };
 
+                 getCx = (d, countries) => {
+                   var country = countries.filter(
+                     c => c.name == d.countryName
+                   )[0];
+                   if (StringUtils.isNotEmpty(country)) {
+                     var y = country.latitude;
+                     var x = country.longitude;
+                     var coordinate = [y, x];
+                     return this.projection()(coordinate)[0];
+                   }
+                 };
+
+                 getCy = (d, countries) => {
+                   var country = countries.filter(
+                     c => c.name == d.countryName
+                   )[0];
+                   if (StringUtils.isNotEmpty(country)) {
+                     var x = country.latitude;
+                     var y = country.longitude;
+                     var coordinate = [x, y];
+                     return this.projection()(coordinate)[1];
+                   }
+                 };
                  //get node color
                  getNodeColor = (id, media) => {
                    var childsCount = media.filter(d => d.id === id).length;
@@ -265,32 +281,18 @@ export default class MediaFrancais extends Component {
                    return childsCount;
                  };
 
-                 drawCnx = (g, relations, media) => {
+                 drawCnx = (g, relations, media, countries) => {
                    //build links
-                   var links = this.buildLinks(relations, media);
+
+                   var links = this.buildLinks(relations, media, countries);
                    this.addLinks(g, links);
                  };
 
-                 //build links [{},{}]
-                 buildLinks = (relations, media) => {
+                 //build links
+                 buildLinks = (relations, media, countries) => {
                    var links = [];
-                   relations.forEach(d => {
-                     //var taille = ;
-                     var link = {
-                       origine: {
-                         value: d.origine,
-                         coordinate: this.getCoordinateByEntity(
-                           media,
-                           d.origine
-                         )
-                       },
-                       cible: {
-                         value: d.cible,
-                         coordinate: this.getCoordinateByEntity(media, d.cible)
-                       },
-                       lien: d.valeur,
-                       etat: d.etat
-                     };
+                   relations.forEach((d, i) => {
+                     var link = this.createLinkObject(d, countries);
                      //add new link object
                      if (this.validateLink(link)) {
                        links.push(link);
@@ -299,6 +301,28 @@ export default class MediaFrancais extends Component {
                    return links;
                  };
 
+                 //create a link DTO
+                 createLinkObject = (d, countries) => {
+                   var link = {
+                     origine: {
+                       value: d.origine,
+                       coordinate: this.getCoordinateByEntity(
+                         countries,
+                         d.origine
+                       )
+                     },
+                     cible: {
+                       value: d.cible,
+                       coordinate: this.getCoordinateByEntity(
+                         countries,
+                         d.cible
+                       )
+                     },
+                     lien: d.valeur,
+                     etat: d.etat
+                   };
+                   return link;
+                 };
                  validateLink = link => {
                    var linkOrigineCoordinate = link.origine.coordinate;
                    var linkCibleCoordinate = link.cible.coordinate;
@@ -315,20 +339,94 @@ export default class MediaFrancais extends Component {
                    return false;
                  };
 
-                 getCoordinateByEntity = (media, entityName) => {
-                   var entity = media.filter(d => d.nom == entityName)[0];
-                   if (
-                     entity != null &&
-                     this.isNotEmpty(entity.x) &&
-                     this.isNotEmpty(entity.y)
-                   ) {
-                     return [entity.x, entity.y];
+                 getCoordinateByEntity = (countries, entityName) => {
+                   //search for associated country name
+                   var country = null;
+                   var countryFromMedia = this.state.medias_francais.filter(
+                     m => m.nom == entityName
+                   )[0];
+
+                   if (StringUtils.isNotEmpty(countryFromMedia)) {
+                     country = countries.filter(
+                       d => d.name == countryFromMedia.countryName
+                     )[0];
+
+                     if (
+                       country != null &&
+                       StringUtils.isNotEmpty(country.longitude) &&
+                       StringUtils.isNotEmpty(country.latitude)
+                     ) {
+                       var cx = country.longitude;
+                       var cy = country.latitude;
+                       return [cy, cx];
+                     }
                    }
                  };
 
                  //creation de connection entre deux pays
                  addLinks = (node, links) => {
-                   var path = d3.geoPath().projection(this.projection());
+                   this.drawLink(node, links);
+                 };
+
+                 //TODO
+                 drawLink = (node, links) => {
+                   //We use this function curve instead of LineString Object to draw direct line
+                   var curve = context => {
+                     var custom = d3.curveLinear(context);
+                     custom._context = context;
+                     custom.point = function(x, y) {
+                       var x = +x;
+                       var y = +y;
+                       switch (this._point) {
+                         case 0:
+                           this._point = 1;
+                           this._line
+                             ? this._context.lineTo(x, y)
+                             : this._context.moveTo(x, y);
+                           this.x0 = x;
+                           this.y0 = y;
+                           break;
+                         case 1:
+                           this._point = 2;
+                         default:
+                           var x1 = this.x0 * 0.5 + x * 0.5;
+                           var y1 = this.y0 * 0.5 + y * 0.5;
+                           var m = 1 / (y1 - y) / (x1 - x);
+                           var r = -100; // offset of mid point.
+                           var k = r / Math.sqrt(1 + m * m);
+                           if (m == Infinity) {
+                             y1 += r;
+                           } else {
+                             y1 += k;
+                             x1 += m * k;
+                           }
+                           this._context.quadraticCurveTo(x1, y1, x, y);
+                           this.x0 = x;
+                           this.y0 = y;
+                           break;
+                       }
+                     };
+                     return custom;
+                   };
+
+                   //Draw a line between two points
+                   var line = d3
+                     .line()
+                     .x(d => {
+                       console.log("dx", d);
+                       return this.projection()([
+                         d.coordinate[0],
+                         d.coordinate[1]
+                       ])[0];
+                     })
+                     .y(d => {
+                       return this.projection()([
+                         d.coordinate[0],
+                         d.coordinate[1]
+                       ])[1];
+                     })
+                     .curve(curve);
+
                    node
                      .append("g")
                      .attr("class", "paths")
@@ -336,27 +434,36 @@ export default class MediaFrancais extends Component {
                      .data(links)
                      .enter()
                      .append("path")
-                     .attr("d", d => path(this.calculateLineString(d)))
-                     .style("fill", "none")
                      .style("stroke", d => this.colorPath(d))
                      .style("stroke-width", 0.5)
+                     .style("fill", "none")
+                     .datum(d => {
+                       return [d.origine, d.cible];
+                     })
+                     .attr("d", line)
                      .append("title")
                      .text(d => d.lien);
                  };
 
-                 calculateLineString = link => {
-                   var coordinateEntityOrigine = link.origine.coordinate;
-                   var coordinateEntityCible = link.cible.coordinate;
-
-                   var linkAsLineString = {
-                     type: "LineString",
-                     coordinates: [
-                       coordinateEntityOrigine,
-                       coordinateEntityCible
-                     ]
-                   };
-                   return linkAsLineString;
-                 };
+                 //Draw a line between two points
+                 lineFunction = d => {
+                   console.log("lineFunction visited", d);
+                   d3.line()
+                     .x(d => {
+                       console.log("dx", d);
+                       return this.projection()([
+                         d.coordinate[0],
+                         d.coordinate[1]
+                       ])[0];
+                     })
+                     .y(d => {
+                       return this.projection()([
+                         d.coordinate[0],
+                         d.coordinate[1]
+                       ])[1];
+                     });
+                   //.curve(this.curveFunction);
+                 };                
 
                  colorPath = link => {
                    switch (link.etat) {
@@ -379,9 +486,20 @@ export default class MediaFrancais extends Component {
 
                    svg.attr("transform", transform);
                  };
+
                  //Events handlers
                  circleOnHover = event => {
-                   return event.nom + " [" + event.x + "," + event.y + "]";
+                   return (
+                     "entity : " +
+                     event.nom +
+                     "country name : " +
+                     event.countryName +
+                     " [" +
+                     event.x +
+                     "," +
+                     event.y +
+                     "]"
+                   );
                  };
 
                  circleOnClick = event => {
@@ -392,13 +510,19 @@ export default class MediaFrancais extends Component {
                  projection() {
                    var geoMercator = d3
                      .geoMercator()
-                     .scale(150)
+                     .scale(100)
                      .translate([800 / 2, 450 / 2]);
 
                    var projection2 = d3
                      .geoOrthographic()
                      .scale(300)
                      .precision(0.1);
+                   var projection3 = d3
+                     .geoConicEqualArea()
+                     .scale(150)
+                     .center([0, 33])
+                     //.translate([width / 2, height / 2])
+                     .precision(0.3);
                    return geoMercator;
                  }
 
@@ -406,7 +530,4 @@ export default class MediaFrancais extends Component {
                    return d3.geoPath().projection(this.projection())(d);
                  };
 
-                 isNotEmpty = entity => {
-                   return entity != "" && entity != "" && entity != null;
-                 };
                }

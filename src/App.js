@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { feature } from "topojson-client"
 import * as d3 from "d3";
-import medias_francais_mock from "./MediaFrancais/data/medias_francais.tsv";
+import countries from "./MediaFrancais/data/countries.tsv";
+import medias_francais_mock from "./MediaFrancais/data/medias_francais_mock.tsv";
 import relations_medias_francais_mock from "./MediaFrancais/data/relations_medias_francais.tsv";
 import MediaFrancais from "./MediaFrancais/MediaFrancais";
+import Test from "./Test";
 
 
 export default class App extends Component {
@@ -25,9 +27,10 @@ export default class App extends Component {
                    };
                  }
 
-                 componentDidMount() {
+                 componentDidMount() {                   
                    this.readMediaFile();
                    this.readRelationFile();
+                   this.readCountries();
                    //this.updateWordMapJson(); 
                    //Comment      
                   this.updateWordMap();
@@ -36,17 +39,22 @@ export default class App extends Component {
                 }
 
                  render() {
-                  const {worldData,jsonData,medias_francais,relations_medias_francais} = this.state;
+                  const {worldData,jsonData,medias_francais,relations_medias_francais,countries} = this.state;
                   if(worldData.length !=0 && medias_francais.length !=0){
                   return (
-
+                    <div>
+                    <div>
+                      {/*<Test></Test>*/}
+                    </div>
                     <div>
                       <MediaFrancais 
                           worldData = {worldData} 
                           medias_francais = {medias_francais} 
                           relations_medias_francais = {relations_medias_francais}
                           jsonData={jsonData}
+                          countries={countries}
                     ></MediaFrancais>
+                    </div>
                     </div>
                   )}
                   return (
@@ -62,6 +70,16 @@ export default class App extends Component {
                     medias_francais : mediaFiltered,
                   })
                   console.log("this.state.medias_francais",this.state.medias_francais);
+                 }
+
+                 readCountries = ()=>{  
+                  d3.tsv(countries).then(response =>{
+                    console.log("countries response",response);
+                    this.setState({
+                      countries : response
+                    }
+                    )
+                  });
                  }
 
                 readMediaFile = () =>{
